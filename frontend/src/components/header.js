@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import "./header.css";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Container,
@@ -9,17 +8,17 @@ import {
   TextField,
   Box,
   Tooltip,
-  Modal,
+  Link,
 } from "@mui/material";
 import {
   AccountCircle,
   Add,
   BookmarkBorder,
-  Menu,
   NotificationsNone,
   Search,
 } from "@mui/icons-material";
-import SearchModal from "../searchModal/searchModal";
+import SearchModal from "./searchModal";
+import { useSelector } from "react-redux";
 
 const DeskTopHeader = ({ isLoggedIn }) => {
   return (
@@ -78,16 +77,32 @@ const DeskTopHeader = ({ isLoggedIn }) => {
           </>
         ) : (
           <>
-            <Typography
-              sx={{ cursor: "pointer", mx: "5px", p: "5px", display: "inline" }}
+            <Link
+              href="/auth"
+              color="rgb(255,255,255)"
+              sx={{
+                cursor: "pointer",
+                mx: "5px",
+                p: "5px",
+                display: "inline",
+                textDecoration: "none",
+              }}
             >
               Our Story
-            </Typography>
-            <Typography
-              sx={{ cursor: "pointer", mx: "5px", p: "5px", display: "inline" }}
+            </Link>
+            <Link
+              href="/auth"
+              color="rgb(255,255,255)"
+              sx={{
+                cursor: "pointer",
+                mx: "5px",
+                p: "5px",
+                display: "inline",
+                textDecoration: "none",
+              }}
             >
               SignIn
-            </Typography>
+            </Link>
           </>
         )}
       </Box>
@@ -147,16 +162,32 @@ const MobileHeader = ({ isLoggedIn }) => {
           </>
         ) : (
           <>
-            <Typography
-              sx={{ cursor: "pointer", mx: "5px", p: "5px", display: "inline" }}
+            <Link
+              href="/auth"
+              color="rgb(255,255,255)"
+              sx={{
+                cursor: "pointer",
+                mx: "5px",
+                p: "5px",
+                display: "inline",
+                textDecoration: "none",
+              }}
             >
               Our Story
-            </Typography>
-            <Typography
-              sx={{ cursor: "pointer", mx: "5px", p: "5px", display: "inline" }}
+            </Link>
+            <Link
+              href="/auth"
+              color="rgb(255,255,255)"
+              sx={{
+                cursor: "pointer",
+                mx: "5px",
+                p: "5px",
+                display: "inline",
+                textDecoration: "none",
+              }}
             >
               SignIn
-            </Typography>
+            </Link>
           </>
         )}
       </Box>
@@ -164,6 +195,11 @@ const MobileHeader = ({ isLoggedIn }) => {
   );
 };
 const Header = () => {
+  const auth = useSelector((state) => state.auth);
+  const [isLoggedIn, setIsloggedIn] = useState(auth.user);
+  useEffect(() => {
+    setIsloggedIn(auth.user);
+  }, [auth]);
   return (
     <AppBar position="static">
       <Container maxWidth="lg">
@@ -183,10 +219,10 @@ const Header = () => {
             Logo
           </Typography>
           <Box display={{ xs: "none", sm: "flex" }} sx={{ flexGrow: "1" }}>
-            <DeskTopHeader isLoggedIn={false} />
+            <DeskTopHeader isLoggedIn={isLoggedIn} />
           </Box>
           <Box display={{ xs: "flex", sm: "none" }} sx={{ flexGrow: "1" }}>
-            <MobileHeader isLoggedIn={false}></MobileHeader>
+            <MobileHeader isLoggedIn={isLoggedIn}></MobileHeader>
           </Box>
         </Toolbar>
       </Container>
