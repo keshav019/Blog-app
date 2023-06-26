@@ -67,18 +67,13 @@ exports.signup = async (req, res, next) => {
     res.status(200).json({
       success: true,
       token: token,
-      authdata: ({
-        avatar,
-        username,
-        fullname,
-        email,
-        _id,
-        website,
-        bio,
-        cover,
-      } = user),
+      avatar,
+      username,
+      fullname,
+      email,
+      _id,
     });
-  } catch (e) {
+  } catch (err) {
     return next(err.message, 500);
   }
 };
@@ -107,18 +102,13 @@ exports.login = async (req, res, next) => {
     res.status(200).json({
       success: true,
       token: token,
-      authdata: ({
-        avatar,
-        username,
-        fullname,
-        email,
-        _id,
-        website,
-        bio,
-        cover,
-      } = user),
+      avatar: user.avatar,
+      username: user.username,
+      fullname: user.fullname,
+      email,
+      _id: user._id,
     });
-  } catch (e) {
+  } catch (err) {
     return next(new AppError(err.message, 500));
   }
 };

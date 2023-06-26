@@ -45,10 +45,7 @@ export const profile = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(
-        `${BASEURL}/api/v1/auth/me`,
-        config
-      );
+      const response = await axios.get(`${BASEURL}/api/v1/auth/me`, config);
       return response;
     } catch (err) {
       if (!err.response) {
@@ -58,15 +55,23 @@ export const profile = createAsyncThunk(
     }
   }
 );
+const user = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
 const initialState = {
-  user: null,
+  user: user,
   error: null,
   isLoading: false,
 };
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logOut() {
+      localStorage.removeItem("userInfo");
+      return {};
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(register.pending, (state, action) => {
@@ -90,8 +95,9 @@ const authSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(login.fulfilled, (state, action) => {
+        localStorage.setItem("userInfo", JSON.stringify(action.payload.data));
         state.isLoading = false;
-        state.user = action.payload;
+        state.user = action.payload.data;
       })
       .addCase(profile.pending, (state, action) => {
         state.isLoading = true;
@@ -108,4 +114,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { logOut } = authSlice.actions;
 export default authSlice.reducer;

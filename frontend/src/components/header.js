@@ -9,18 +9,71 @@ import {
   Box,
   Tooltip,
   Link,
+  Menu,
+  MenuItem,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import {
-  AccountCircle,
   Add,
   BookmarkBorder,
   NotificationsNone,
   Search,
 } from "@mui/icons-material";
 import SearchModal from "./searchModal";
-import { useSelector } from "react-redux";
-
-const DeskTopHeader = ({ isLoggedIn }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../store/auth";
+const Drawer = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { fullname, avatar } = useSelector((state) => state.auth.user);
+  const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const logOutHandler = () => {
+    dispatch(logOut());
+  };
+  return (
+    <>
+      <Tooltip
+        title="Your Profile"
+        sx={{
+          cursor: "pointer",
+          mx: "5px",
+          p: "5px",
+        }}
+        onClick={handleClick}
+      >
+        <Avatar
+          sx={{ width: 35, height: 35, cursor: "pointer" }}
+          alt={fullname}
+          src={avatar}
+        >
+          {fullname.charAt(0).toUpperCase()}
+        </Avatar>
+      </Tooltip>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem>
+          <Link href="/profile" sx={{ textDecoration: "none", color: "black" }}>
+            My account
+          </Link>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={logOutHandler}>Logout</MenuItem>
+      </Menu>
+    </>
+  );
+};
+const DeskTopHeader = ({ isLoggedIn, name, image }) => {
   return (
     <>
       <FormControl
@@ -43,7 +96,7 @@ const DeskTopHeader = ({ isLoggedIn }) => {
           }}
         ></TextField>
       </FormControl>
-      <Box sx={{ ml: "auto" }}>
+      <Box sx={{ ml: "auto", display: "flex", flexDirection: "row" }}>
         {isLoggedIn ? (
           <>
             <Tooltip
@@ -68,12 +121,7 @@ const DeskTopHeader = ({ isLoggedIn }) => {
             >
               <Add />
             </Tooltip>
-            <Tooltip
-              title="Your Account"
-              sx={{ cursor: "pointer", mx: "5px", p: "5px" }}
-            >
-              <AccountCircle />
-            </Tooltip>
+            <Drawer />
           </>
         ) : (
           <>
@@ -128,7 +176,7 @@ const MobileHeader = ({ isLoggedIn }) => {
           <Search onClick={handleOpen} sx={{ mr: "7px" }} />
         </FormControl>
       </SearchModal>
-      <Box sx={{ ml: "auto" }}>
+      <Box sx={{ ml: "auto", display: "flex", flexDirection: "row" }}>
         {isLoggedIn ? (
           <>
             <Tooltip
@@ -153,12 +201,7 @@ const MobileHeader = ({ isLoggedIn }) => {
             >
               <Add />
             </Tooltip>
-            <Tooltip
-              title="Your Account"
-              sx={{ cursor: "pointer", mx: "5px", p: "5px" }}
-            >
-              <AccountCircle />
-            </Tooltip>
+            <Drawer />
           </>
         ) : (
           <>
