@@ -1,11 +1,13 @@
 import { TextField, FormControl, Button, Alert, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
-import { register } from "../store/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { baseurl } from '../constant'
 const ForgotPassword = () => {
     const auth = useSelector((store) => store.auth);
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [step, setStep] = useState(1);
@@ -16,24 +18,39 @@ const ForgotPassword = () => {
         password: "",
     });
     const validateEmail = async () => {
-        setStep(2);
+        setError(null);
+        setLoading(true);
+        try {
+            await axios.put(`${baseurl}/api/v1/auth/forgot-password`, { email: email });
+            setLoading(false);
+            setUserData({ ...userData, email: email });
+            setStep(2);
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+            }
+            setLoading(false);
+        }
     }
     const resetPassword = async () => {
-        dispatch(register(userData));
+        setError(null);
+        setLoading(true);
+        try {
+            await axios.put(`${baseurl}/api/v1/auth/reset-password`, userData);
+            setLoading(false);
+            navigate("/login")
+        } catch (err) {
+            if (err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+            }
+            setLoading(false);
+        }
     };
-
     useEffect(() => {
-        if (auth.isLoading) {
-            setLoading(true);
-        }
-        if (auth.error) {
-            setLoading(false);
-            setError(auth.error.message);
-        }
         if (auth.user) {
-            setLoading(false);
+            navigate("/")
         }
-    }, [auth]);
+    }, []);
 
     return (
         <div
@@ -74,17 +91,17 @@ const ForgotPassword = () => {
                             startIcon={<LoginIcon />}
                             disabled={loading}
                         >
-                            Verify
+                            {loading ? 'Loading...' : 'Verify Email'}
                         </Button>
                     </>}
                     {step === 2 && <>
-                        <p>Use OTP 123456 to verify</p>
                         <TextField
                             required
                             label="Email"
                             size="small"
                             name="email"
                             disabled
+                            value={userData.email}
                             onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                             sx={{ my: "10px", mx: "auto", width: "250px" }}
                         />
@@ -111,7 +128,7 @@ const ForgotPassword = () => {
                             startIcon={<LoginIcon />}
                             disabled={loading}
                         >
-                            Reset Password
+                            {loading ? 'Loading...' : 'Reset Password'}
                         </Button>
                     </>}
                 </FormControl>

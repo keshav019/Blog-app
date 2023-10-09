@@ -9,11 +9,11 @@ exports.signup = async (req, res, next) => {
   try {
     let { firstname, lastname, email, password, bio } = req.body;
     if (!firstname || !lastname || !email || !password) {
-      return next(new AppError("Please fill all fields", 400));
+      return next(new AppError("Please fill all required fields", 400));
     }
 
-    validateEmail(email);
-    validatePassword(password);
+    validateEmail(email, next);
+    validatePassword(password, next);
 
     const existingUser = await User.findOne({
       email: email.toLowerCase(),
@@ -46,7 +46,7 @@ exports.signup = async (req, res, next) => {
         bio
       });
     }
-    sendMail(user.otp, email, firstname);
+    // await sendMail(user.otp, email, firstname);
     res.status(200).json({
       firstname,
       lastname,
@@ -64,8 +64,8 @@ exports.login = async (req, res, next) => {
     if (!email || !password) {
       return next(new AppError("Please fill your credentials", 400));
     }
-    validateEmail(email);
-    validatePassword(password);
+    validateEmail(email, next);
+    validatePassword(password, next);
     let user = await User.findOne({ email: email });
     if (!user || !user.enabled) {
       return next(new AppError("User not found", 404));
@@ -132,6 +132,7 @@ exports.updateProfile = async (req, res, next) => {
 exports.verifyEmail = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
+    validateEmail(email, next);
     const user = await User.findOne({ email });
     if (!user) {
       return next(new AppError(`User Not Exist with email: ${email}`, 404));
@@ -157,17 +158,18 @@ exports.verifyEmail = async (req, res, next) => {
 exports.forgotPassword = async (req, res, next) => {
   const { email } = req.body;
   try {
+    validateEmail(email, next);
     const user = await User.findOne({ email }).exec();
 
     if (!user) {
-      throw new Error(`User Not Exist with email: ${email}`);
+      return next(new AppError(`User Not Exist with email: ${email}`, 500));
     }
 
     const otp = generateOTP();
     user.otp = otp;
     user.updated_at = new Date();
     await user.save();
-    sendMail(user.otp, email, user.firstname);
+    // await sendMail(user.otp, email, user.firstname);
     return res.status(200).json({ 'message': "OTP Sent !" });
   } catch (err) {
     return next(new AppError(err.message, 500));
@@ -177,6 +179,8 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   const { password, email, otp } = req.body;
   try {
+    validateEmail(email, next);
+    validatePassword(password, next);
     const user = await User.findOne({ email });
 
     if (!user) {

@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../store/auth";
 const Drawer = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { fullname, avatar } = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const handleClick = (event) => {
@@ -50,10 +50,10 @@ const Drawer = () => {
       >
         <Avatar
           sx={{ width: 35, height: 35, cursor: "pointer" }}
-          alt={fullname}
-          src={avatar}
+          alt={"  "}
+          src={user && user.firstname}
         >
-          {fullname.charAt(0).toUpperCase()}
+          {user && user.firstname.charAt(0).toUpperCase()}
         </Avatar>
       </Tooltip>
       <Menu
@@ -73,7 +73,7 @@ const Drawer = () => {
     </>
   );
 };
-const DeskTopHeader = ({ isLoggedIn, name, image }) => {
+const DeskTopHeader = ({ isLoggedIn }) => {
   return (
     <>
       <FormControl
@@ -126,7 +126,7 @@ const DeskTopHeader = ({ isLoggedIn, name, image }) => {
         ) : (
           <>
             <Link
-              href="/auth"
+              href="/register"
               color="rgb(255,255,255)"
               sx={{
                 cursor: "pointer",
@@ -136,10 +136,10 @@ const DeskTopHeader = ({ isLoggedIn, name, image }) => {
                 textDecoration: "none",
               }}
             >
-              Signup
+              Register
             </Link>
             <Link
-              href="/auth"
+              href="/login"
               color="rgb(255,255,255)"
               sx={{
                 cursor: "pointer",
@@ -149,7 +149,7 @@ const DeskTopHeader = ({ isLoggedIn, name, image }) => {
                 textDecoration: "none",
               }}
             >
-              Signin
+              Login
             </Link>
           </>
         )}
@@ -206,7 +206,7 @@ const MobileHeader = ({ isLoggedIn }) => {
         ) : (
           <>
             <Link
-              href="/auth"
+              href="/register"
               color="rgb(255,255,255)"
               sx={{
                 cursor: "pointer",
@@ -216,10 +216,10 @@ const MobileHeader = ({ isLoggedIn }) => {
                 textDecoration: "none",
               }}
             >
-              sign
+              Register
             </Link>
             <Link
-              href="/auth"
+              href="/login"
               color="rgb(255,255,255)"
               sx={{
                 cursor: "pointer",
@@ -229,7 +229,7 @@ const MobileHeader = ({ isLoggedIn }) => {
                 textDecoration: "none",
               }}
             >
-              Signin
+              Login
             </Link>
           </>
         )}
@@ -239,9 +239,9 @@ const MobileHeader = ({ isLoggedIn }) => {
 };
 const Header = () => {
   const auth = useSelector((state) => state.auth);
-  const [isLoggedIn, setIsloggedIn] = useState(auth.user);
+  const [isLoggedIn, setIsloggedIn] = useState(auth.user != null);
   useEffect(() => {
-    setIsloggedIn(auth.user);
+    setIsloggedIn(auth.user!=null);
   }, [auth]);
   return (
     <AppBar position="static">
