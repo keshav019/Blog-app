@@ -1,1 +1,1 @@
-exports.baseurl = "http://localhost:4000";
+exports.baseurl = "";
