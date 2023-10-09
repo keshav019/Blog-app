@@ -45,7 +45,7 @@ export const profile = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(`${BASEURL}/api/v1/auth/me`, config);
+      const response = await axios.get(`${BASEURL}/api/v1/auth/profile`, config);
       return response;
     } catch (err) {
       if (!err.response) {
@@ -55,6 +55,8 @@ export const profile = createAsyncThunk(
     }
   }
 );
+
+
 const user = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;

@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const StorySchema = new Schema({
-    short_des:{
-        type:String,
-        required:true
-    },
     title:{
         type:String,
         required:true
@@ -13,11 +9,11 @@ const StorySchema = new Schema({
     cover:{
         type:String
     },    
-    html_content:{
+    content:{
         type:String,
         required:true
     },    
-    user:{
+    postedBy:{
         type:mongoose.Schema.ObjectId,
         ref:"User",
         required:true
@@ -36,18 +32,6 @@ const StorySchema = new Schema({
         type: mongoose.Schema.ObjectId,
         ref:"Comment"
       }],
-
-    reportCount:{
-          type:Number,
-          default:0
-      },
-    readingTime:{
-        type:String,
-      },
-    createdAt:{
-        type:Date,
-        default: Date.now
-    }
 });
 StorySchema.pre('remove', function(next) {
     this.model('Comment').deleteMany({ story: this._id }, (err,res)=>{next(err)});

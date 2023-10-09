@@ -37,7 +37,7 @@ const Auth = () => {
       style={{
         backgroundColor: "rgba(0,0,0,0.3)",
         paddingTop: "30px",
-        minHeight: "80vh",
+        minHeight: "90vh",
       }}
     >
       <Box

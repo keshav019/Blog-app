@@ -1,26 +1,22 @@
 const mongoose = require("mongoose");
 
 const CommentSchema = new mongoose.Schema({
-    user:{
-        type:mongoose.Schema.ObjectId,
-        ref:"User",
-        required:true
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true
     },
-    text:{
-        type:String,
-        required:true,
+    story: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Story"
     },
-    story:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Story"
+    description: {
+        type: String,
+        required: true,
     },
-    likedBy:[{
-        type:mongoose.Schema.ObjectId,
-        ref:"User"
-    }],
-    createdAt:{
-        type:Date,
-        default:Date.now
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 

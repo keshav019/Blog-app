@@ -4,26 +4,18 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema({
-  fullname: {
+  firstname: {
     type: String,
     required: [true, "Your fullname"],
     trim: true,
   },
-  username: {
+  lastname: {
     type: String,
-    required: [true, "Your username"],
     trim: true,
-    unique: true,
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-  unseennotice: [{ type: mongoose.Schema.ObjectId, ref: "Notification" }],
-
   email: {
     type: String,
-    required: [true, "Your email"],
+    required: [true, "Email is required"],
     trim: true,
     unique: true,
   },
@@ -31,24 +23,23 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please enter your password"],
   },
-  avatar: {
-    type: String,
-    default: "",
+  enabled: {
+    type: Boolean,
+    default: false
   },
-  cover: {
-    type: String,
+  otp: {
+    type: String
   },
   bio: String,
-  website: String,
-  preferredTopics: [{ type: String }],
-  followers: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
-  following: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+  intrest: [{ type: mongoose.Schema.ObjectId, ref: "Topic" }],
   stories: [{ type: mongoose.Schema.ObjectId, ref: "Story" }],
+}, {
+  timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
 });
 
 userSchema.methods.getJwtToken = function () {
   return jwt.sign(
-    { id: this._id, tempid: this.tempid },
+    { userId: this._id, tempid: this.tempid },
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE,
@@ -68,24 +59,6 @@ userSchema.pre("remove", function (next) {
     next(err);
   });
   this.model("Story").deleteMany({ author: this._id }, (err, res) => {
-    next(err);
-  });
-  this.model("Report").deleteMany({ reporter: this._id }, (err, res) => {
-    next(err);
-  });
-  this.model("Notification").deleteMany(
-    { sender: this.username },
-    (err, res) => {
-      next(err);
-    }
-  );
-  this.model("ReadingList").deleteMany({ userid: this._id }, (err, res) => {
-    next(err);
-  });
-  this.model("LikedStory").deleteMany({ userid: this._id }, (err, res) => {
-    next(err);
-  });
-  this.model("SavedStory").deleteMany({ userid: this._id }, (err, res) => {
     next(err);
   });
 });

@@ -1,4 +1,4 @@
-import { TextField, FormControl, Button, Alert } from "@mui/material";
+import { TextField, FormControl, Button, Alert,Link } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,6 +57,7 @@ const Login = () => {
       >
         Login
       </Button>
+      <Link href="/forgot-password" underline="hover" mt={1} mx={5}>Forgot password</Link>
     </FormControl>
   );
 };

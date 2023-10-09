@@ -136,7 +136,7 @@ const DeskTopHeader = ({ isLoggedIn, name, image }) => {
                 textDecoration: "none",
               }}
             >
-              Our Story
+              Signup
             </Link>
             <Link
               href="/auth"
@@ -149,7 +149,7 @@ const DeskTopHeader = ({ isLoggedIn, name, image }) => {
                 textDecoration: "none",
               }}
             >
-              SignIn
+              Signin
             </Link>
           </>
         )}
@@ -216,7 +216,7 @@ const MobileHeader = ({ isLoggedIn }) => {
                 textDecoration: "none",
               }}
             >
-              Our Story
+              sign
             </Link>
             <Link
               href="/auth"
@@ -229,7 +229,7 @@ const MobileHeader = ({ isLoggedIn }) => {
                 textDecoration: "none",
               }}
             >
-              SignIn
+              Signin
             </Link>
           </>
         )}
