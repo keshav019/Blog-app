@@ -46,7 +46,7 @@ exports.signup = async (req, res, next) => {
         bio
       });
     }
-    // await sendMail(user.otp, email, firstname);
+    await sendMail(user.otp, email, firstname);
     res.status(200).json({
       firstname,
       lastname,
@@ -169,7 +169,7 @@ exports.forgotPassword = async (req, res, next) => {
     user.otp = otp;
     user.updated_at = new Date();
     await user.save();
-    // await sendMail(user.otp, email, user.firstname);
+    await sendMail(user.otp, email, user.firstname);
     return res.status(200).json({ 'message': "OTP Sent !" });
   } catch (err) {
     return next(new AppError(err.message, 500));

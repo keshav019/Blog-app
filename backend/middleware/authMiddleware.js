@@ -4,6 +4,7 @@ const AppError = require("../utils/error");
 
 exports.Verify = async (req, res, next) => {
   var token;
+  console.log("token");
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer ")

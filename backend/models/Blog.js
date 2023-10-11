@@ -5,20 +5,16 @@ const StorySchema = new Schema({
     title:{
         type:String,
         required:true
-    },
-    cover:{
-        type:String
     },    
     content:{
         type:String,
         required:true
     },    
-    postedBy:{
+    author:{
         type:mongoose.Schema.ObjectId,
         ref:"User",
         required:true
     }, 
-
     topics:[{
         type:mongoose.Schema.ObjectId,
         ref:"Topic"
@@ -33,12 +29,8 @@ const StorySchema = new Schema({
         ref:"Comment"
       }],
 });
+blogSchema.index({ title: 'text', content: 'text' });
 StorySchema.pre('remove', function(next) {
     this.model('Comment').deleteMany({ story: this._id }, (err,res)=>{next(err)});
-    this.model("Report").deleteMany({story:this._id},(err,res)=>{next(err)});
-    this.model("Notification").deleteMany({story:this._id},(err,res)=>{next(err)});
-    this.model("LikedStory").deleteMany({story:this._id},(err,res)=>{next(err)});
-    this.model("ReadingList").deleteMany({story:this._id},(err,res)=>{next(err)});
-    this.model("SavedStory").deleteMany({story:this._id},(err,res)=>{next(err)});
 });
 module.exports = mongoose.model("Story", StorySchema);
